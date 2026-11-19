@@ -176,7 +176,6 @@
     {
       "type": "ActionSet",
       "spacing": "Small",
-      "$when": "${hasFolders}",
       "actions": [
         {
           "type": "Action.Execute",
@@ -196,6 +195,13 @@
           "type": "Action.Execute",
           "title": "${manageLabel}",
           "verb": "manage",
+          "associatedInputs": "none",
+          "$when": "${hasFolders}"
+        },
+        {
+          "type": "Action.Execute",
+          "title": "关闭所有文件夹窗口",
+          "verb": "closeExplorerWindows",
           "associatedInputs": "none"
         }
       ]

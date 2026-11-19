@@ -35,40 +35,18 @@ if (-not $registered -or $registered.Version -lt $version) {
     }
 }
 
-$argument = '--close-explorer-hotkey'
-$exe = Join-Path $installed.InstallLocation 'FolderCardsWidget.exe'
-$startup = Join-Path ([Environment]::GetFolderPath('Startup')) 'FolderCards - Close Explorer Hotkey.lnk'
-$shell = New-Object -ComObject WScript.Shell
-$link = $shell.CreateShortcut($startup)
-$link.TargetPath = $exe
-$link.WorkingDirectory = $installed.InstallLocation
-$link.Arguments = $argument
-$link.Description = 'Folder Cards close-Explorer shortcut'
-$link.Save()
-
+# Retire the login listener installed by version 1.9.0.
 $session = (Get-Process -Id $PID).SessionId
-$ownPrefix = [IO.Path]::GetFullPath($destination).TrimEnd('\') + '\'
-$helpers = @(Get-CimInstance Win32_Process -Filter "Name='FolderCardsWidget.exe'" |
-    Where-Object {
-        $_.SessionId -eq $session -and $_.ExecutablePath -and
-        $_.ExecutablePath.StartsWith($ownPrefix, [StringComparison]::OrdinalIgnoreCase) -and
-        $_.CommandLine -match '(?:^|\s)--close-explorer-hotkey\s*$'
-    })
-
-foreach ($old in $helpers | Where-Object ExecutablePath -ne $exe) {
-    Stop-Process -Id $old.ProcessId -ErrorAction SilentlyContinue
-}
-if (-not ($helpers | Where-Object ExecutablePath -eq $exe)) {
-    Start-Process -FilePath $exe -ArgumentList $argument -WindowStyle Hidden
-}
-
-for ($try = 0; $try -lt 20; $try++) {
-    $ready = $null
-    if ([Threading.Mutex]::TryOpenExisting('Local\FolderCardsWidget.CloseExplorerHotkey', [ref]$ready)) {
-        $ready.Dispose()
-        Write-Output '关闭文件夹窗口快捷键已启用。'
-        return
+$prefix = $destination
+$prefix += '\'
+foreach($helper in Get-CimInstance Win32_Process -Filter "Name='FolderCardsWidget.exe'") {
+    if ($helper.SessionId -eq $session -and $helper.ExecutablePath -and
+        $helper.ExecutablePath.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase) -and
+        $helper.CommandLine -match '(?:^|\s)--close-explorer-hotkey\s*$') {
+        Stop-Process -Id $helper.ProcessId
     }
-    Start-Sleep -Milliseconds 150
 }
-Write-Warning '关闭文件夹窗口快捷键未注册，可能已被其他应用占用。'
+$link = Join-Path ([Environment]::GetFolderPath('Startup')) 'FolderCards - Close Explorer Hotkey.lnk'
+if (Test-Path -LiteralPath $link) { Remove-Item -LiteralPath $link }
+
+Write-Output '按 Win + W，在文件夹卡片底部使用「关闭所有文件夹窗口」。'

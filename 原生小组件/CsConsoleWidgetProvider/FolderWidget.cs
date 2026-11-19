@@ -54,6 +54,13 @@ namespace CsConsoleWidgetProvider
 
         private void InvokeAction(string verb, string rawData)
         {
+            if (verb == "closeExplorerWindows")
+            {
+                int count = ExplorerFolderWindows.CloseAll();
+                WidgetTrace.Write("Explorer close requests: " + count);
+                return;
+            }
+
             string folderToOpen = null;
             lock (Gate)
             {

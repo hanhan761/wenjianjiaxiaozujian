@@ -5,42 +5,25 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 
 namespace CsConsoleWidgetProvider
 {
-    internal static class CloseExplorerHotkey
+    internal static class ExplorerFolderWindows
     {
-        private const int HotkeyId = 1;
-        private const uint Modifiers = 0x4000 | 0x0001 | 0x0002 | 0x0004; // No repeat, Alt, Ctrl, Shift
-        private const uint KeyW = 0x57;
-        private const uint WmHotkey = 0x0312;
         private const uint WmClose = 0x0010;
         private const uint OwnerWindow = 4;
-        private const string ReadyMutex = @"Local\FolderCardsWidget.CloseExplorerHotkey";
         private static readonly string ExplorerPath =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe");
 
-        internal static void Run()
+        internal static int CloseAll()
         {
-            if (!RegisterHotKey(0, HotkeyId, Modifiers, KeyW))
-                return;
-
-            using var ready = new Mutex(false, ReadyMutex);
-            try
+            int count = 0;
+            foreach (nint window in FindWindows())
             {
-                while (GetMessage(out var message, 0, 0, 0) > 0)
-                {
-                    if (message.Id == WmHotkey && message.WParam == HotkeyId)
-                        foreach (nint window in FindWindows())
-                            if (IsFolderWindow(window))
-                                PostMessage(window, WmClose, 0, 0);
-                }
+                if (IsFolderWindow(window) && PostMessage(window, WmClose, 0, 0))
+                    count++;
             }
-            finally
-            {
-                UnregisterHotKey(0, HotkeyId);
-            }
+            return count;
         }
 
         internal static List<nint> FindWindows()
@@ -79,25 +62,8 @@ namespace CsConsoleWidgetProvider
             }
         }
 
-        [StructLayout(LayoutKind.Sequential)]
-        private struct NativeMessage
-        {
-            private nint window;
-            internal uint Id;
-            internal nuint WParam;
-            private nint lParam;
-            private uint time;
-            private int x, y;
-            private uint reserved;
-        }
-
         private delegate bool WindowCallback(nint window, nint parameter);
 
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool RegisterHotKey(nint window, int id, uint modifiers, uint virtualKey);
-        [DllImport("user32.dll")] private static extern bool UnregisterHotKey(nint window, int id);
-        [DllImport("user32.dll", EntryPoint = "GetMessageW")]
-        private static extern int GetMessage(out NativeMessage message, nint window, uint first, uint last);
         [DllImport("user32.dll")] private static extern bool EnumWindows(WindowCallback callback, nint parameter);
         [DllImport("user32.dll")] private static extern bool IsWindowVisible(nint window);
         [DllImport("user32.dll")] private static extern nint GetWindow(nint window, uint command);

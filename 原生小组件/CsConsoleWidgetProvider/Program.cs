@@ -16,12 +16,6 @@ namespace CsConsoleWidgetProvider
             if (args.Length == 0)
                 return;
 
-            if (args[0] == "--close-explorer-hotkey")
-            {
-                CloseExplorerHotkey.Run();
-                return;
-            }
-
             try
             {
                 WinRT.ComWrappersSupport.InitializeComWrappers();
