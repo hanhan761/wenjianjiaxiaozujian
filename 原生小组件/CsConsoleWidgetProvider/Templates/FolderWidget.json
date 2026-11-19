@@ -8,26 +8,98 @@
       "style": "emphasis",
       "items": [
         {
-          "type": "Input.Text",
-          "id": "path",
-          "placeholder": "粘贴文件夹绝对路径"
-        },
-        {
-          "type": "Input.Text",
-          "id": "name",
-          "placeholder": "名称可选 · 留空用原名",
-          "maxLength": 64,
-          "spacing": "Small"
-        },
-        {
-          "type": "ActionSet",
+          "type": "ColumnSet",
           "spacing": "Small",
-          "actions": [
+          "columns": [
             {
-              "type": "Action.Execute",
-              "title": "添加",
-              "verb": "add",
-              "style": "positive"
+              "type": "Column",
+              "width": "66px",
+              "verticalContentAlignment": "Center",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "文件夹路径",
+                  "size": "Small",
+                  "weight": "Bolder",
+                  "wrap": false
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "stretch",
+              "spacing": "Small",
+              "verticalContentAlignment": "Center",
+              "items": [
+                {
+                  "type": "Input.Text",
+                  "id": "path",
+                  "placeholder": "粘贴文件夹绝对路径"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "ColumnSet",
+          "spacing": "Small",
+          "columns": [
+            {
+              "type": "Column",
+              "width": "66px",
+              "verticalContentAlignment": "Center",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "卡片名称",
+                  "size": "Small",
+                  "weight": "Bolder",
+                  "wrap": false
+                }
+              ]
+            },
+            {
+              "type": "Column",
+              "width": "stretch",
+              "spacing": "Small",
+              "verticalContentAlignment": "Center",
+              "items": [
+                {
+                  "type": "Input.Text",
+                  "id": "name",
+                  "placeholder": "可选，默认使用文件夹名",
+                  "maxLength": 64
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "ColumnSet",
+          "spacing": "Small",
+          "columns": [
+            {
+              "type": "Column",
+              "width": "stretch",
+              "items": []
+            },
+            {
+              "type": "Column",
+              "width": "auto",
+              "spacing": "None",
+              "items": [
+                {
+                  "type": "ActionSet",
+                  "actions": [
+                    {
+                      "type": "Action.Execute",
+                      "title": "添加",
+                      "verb": "add",
+                      "style": "positive"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }

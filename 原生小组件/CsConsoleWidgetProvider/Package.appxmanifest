@@ -11,7 +11,7 @@
 	<Identity
 	  Name="FolderCardsWidget.Local"
 	  Publisher="CN=Folder Cards Local, OID.2.25.311729368913984317654407730594956997722=1"
-	  Version="1.9.2.0" ProcessorArchitecture="x64" />
+	  Version="1.9.3.0" ProcessorArchitecture="x64" />
 
 	<Properties>
 		<DisplayName>文件夹卡片</DisplayName>
