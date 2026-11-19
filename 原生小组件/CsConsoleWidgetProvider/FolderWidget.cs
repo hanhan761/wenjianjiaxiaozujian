@@ -56,8 +56,16 @@ namespace CsConsoleWidgetProvider
         {
             if (verb == "closeExplorerWindows")
             {
-                int count = ExplorerFolderWindows.CloseAll();
-                WidgetTrace.Write("Explorer close requests: " + count);
+                try
+                {
+                    int count = ExplorerFolderWindows.CloseAll();
+                    WidgetTrace.Write("Explorer close requests: " + count);
+                }
+                finally
+                {
+                    // Complete the widget action as soon as the close messages are posted.
+                    Update("close Explorer windows");
+                }
                 return;
             }
 
