@@ -1,0 +1,19 @@
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+*.msix
+*.msixbundle
+*.appx
+*.appxbundle
+*.lnk
+*.exe
+*.pdb
+*.log
+*.xml.bak
+/AGENTS.md
+/Quick Access Popup/
+/%SystemDrive%/
+/src/*
+!/src/Library.cs

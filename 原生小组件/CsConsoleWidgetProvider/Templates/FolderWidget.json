@@ -1,0 +1,204 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "Container",
+      "style": "emphasis",
+      "items": [
+        {
+          "type": "Input.Text",
+          "id": "path",
+          "placeholder": "粘贴文件夹绝对路径"
+        },
+        {
+          "type": "Input.Text",
+          "id": "name",
+          "placeholder": "名称可选 · 留空用原名",
+          "maxLength": 64,
+          "spacing": "Small"
+        },
+        {
+          "type": "ActionSet",
+          "spacing": "Small",
+          "actions": [
+            {
+              "type": "Action.Execute",
+              "title": "添加",
+              "verb": "add",
+              "style": "positive"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "text": "${message}",
+      "wrap": true,
+      "size": "Small",
+      "color": "attention",
+      "$when": "${hasMessage}",
+      "spacing": "Small"
+    },
+    {
+      "type": "ColumnSet",
+      "spacing": "Small",
+      "$data": "${rows}",
+      "columns": [
+        {
+          "type": "Column",
+          "width": "stretch",
+          "spacing": "None",
+          "items": [
+            {
+              "type": "Container",
+              "style": "emphasis",
+              "minHeight": "42px",
+              "verticalContentAlignment": "Center",
+              "selectAction": {
+                "type": "Action.Execute",
+                "title": "${left.label}",
+                "verb": "${left.action}",
+                "data": {
+                  "folder": "${left.folder}"
+                },
+                "associatedInputs": "none"
+              },
+              "items": [
+                {
+                  "type": "ColumnSet",
+                  "columns": [
+                    {
+                      "type": "Column",
+                      "width": "auto",
+                      "verticalContentAlignment": "Center",
+                      "items": [
+                        {
+                          "type": "TextBlock",
+                          "text": "${left.icon}",
+                          "size": "Small",
+                          "color": "accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Column",
+                      "width": "stretch",
+                      "spacing": "Small",
+                      "verticalContentAlignment": "Center",
+                      "items": [
+                        {
+                          "type": "TextBlock",
+                          "text": "${left.text}",
+                          "weight": "Bolder",
+                          "wrap": true,
+                          "maxLines": 1,
+                          "size": "Small"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": "stretch",
+          "spacing": "Small",
+          "$when": "${hasRight}",
+          "items": [
+            {
+              "type": "Container",
+              "style": "emphasis",
+              "minHeight": "42px",
+              "verticalContentAlignment": "Center",
+              "selectAction": {
+                "type": "Action.Execute",
+                "title": "${right.label}",
+                "verb": "${right.action}",
+                "data": {
+                  "folder": "${right.folder}"
+                },
+                "associatedInputs": "none"
+              },
+              "items": [
+                {
+                  "type": "ColumnSet",
+                  "columns": [
+                    {
+                      "type": "Column",
+                      "width": "auto",
+                      "verticalContentAlignment": "Center",
+                      "items": [
+                        {
+                          "type": "TextBlock",
+                          "text": "${right.icon}",
+                          "size": "Small",
+                          "color": "accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Column",
+                      "width": "stretch",
+                      "spacing": "Small",
+                      "verticalContentAlignment": "Center",
+                      "items": [
+                        {
+                          "type": "TextBlock",
+                          "text": "${right.text}",
+                          "weight": "Bolder",
+                          "wrap": true,
+                          "maxLines": 1,
+                          "size": "Small"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": "stretch",
+          "spacing": "Small",
+          "$when": "${!hasRight}",
+          "items": []
+        }
+      ]
+    },
+    {
+      "type": "ActionSet",
+      "spacing": "Small",
+      "$when": "${hasFolders}",
+      "actions": [
+        {
+          "type": "Action.Execute",
+          "title": "上一页",
+          "verb": "previous",
+          "associatedInputs": "none",
+          "$when": "${previous}"
+        },
+        {
+          "type": "Action.Execute",
+          "title": "下一页",
+          "verb": "next",
+          "associatedInputs": "none",
+          "$when": "${next}"
+        },
+        {
+          "type": "Action.Execute",
+          "title": "${manageLabel}",
+          "verb": "manage",
+          "associatedInputs": "none"
+        }
+      ]
+    }
+  ]
+}
